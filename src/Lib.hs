@@ -28,7 +28,7 @@ someFunc = do
 
 testGitHubCall :: IO ()
 testGitHubCall = 
-  (SC.runClientM (GH.test "molamphd") =<< env) >>= \case
+  (SC.runClientM (GH.test (Just "haskell-app") "molamphd") =<< env) >>= \case
 
     Left err -> do
       putStrLn $ "heuston, we have a problem: " ++ show err
