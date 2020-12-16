@@ -13,4 +13,4 @@ someFunc = do
 
 testGitHubCall :: IO ()
 testGitHubCall = do
-  putStrLn "i would doa call here, so i would."
+  putStrLn "I would do a call here, so I would."
