@@ -15,6 +15,7 @@ module Lib
     ( someFunc
     ) where
 
+-- imports
 import qualified GitHub as GH
 import qualified Servant.Client               as SC
 import           Network.HTTP.Client          (newManager)
@@ -41,6 +42,7 @@ someFunc = do
 
 
 testGitHubCall :: BasicAuthData -> Text -> IO ()
+-- gets details for the username provided via the command line parameter 
 testGitHubCall auth name = 
   (SC.runClientM (GH.getUser (Just "haskell-app") auth name) =<< env) >>= \case
 
@@ -69,16 +71,16 @@ testGitHubCall auth name =
 	    (ers, _)-> do
               putStrLn $ "Error getting contributors: " ++ show ers
 
-	-- get languages used in repos 
-	-- (SC.runClientM (GH.getLanguages (Just "haskell-app") auth name) =<< env) >>= \case
+	-- get list of languages specified used in repos and amount of code (in bytes) for each
+	 -- partitionEithers <$> mapM (getLanguages auth name) repos >>= \case
 
-        --   ([], languages) -> 
-        --      putStrLn $ "languages used in repos are: " ++ "\n\t" ++
-        --     (intercalate "\n\t" .
-        --       map (\(GH.RepoLanguages n c) -> "[" ++ show n ++ "]")languages)
+         -- ([], languages) -> 
+            -- putStrLn $ "languages used in repos and amount of code for each (in bytes): " ++ "\n\t" ++
+             -- (intercalate "\n\t" .
+               -- map (\(GH.RepoLanguages c p j h) -> "[" ++ show c ++ ", " ++ show p ++ ", " ++ show j ++ ", " ++ show h ++ "]") languages)
 
-	--    (errs, _)-> do
-        --     putStrLn $ "Error getting languages: " ++ show errs
+	   -- (errs, _)-> do
+            -- putStrLn $ "Error getting languages: " ++ show errs
                 
            
      
@@ -91,6 +93,7 @@ testGitHubCall auth name =
         getContribs auth name (GH.GitHubRepo repo _ _ _ _ _ _) =
           SC.runClientM (GH.getRepoContribs (Just "haskell-app") auth name repo) =<< env
 
+	-- groups contributors by number of commits in ascending order
         groupContributors :: [GH.RepoContributor] -> [GH.RepoContributor]
         groupContributors  = sortBy (\(GH.RepoContributor _ c1) (GH.RepoContributor _ c2) ->  compare c1 c2) .
                              map mapfn .

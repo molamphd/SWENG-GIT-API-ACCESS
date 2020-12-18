@@ -50,7 +50,10 @@ data RepoContributor =
 
 
 data RepoLanguages =
-  RepoLanguages   { name :: Text
+  RepoLanguages   {  c :: Integer
+		   , python :: Integer
+		   , java :: Integer
+		   , haskell :: Integer
                   } deriving (Generic, FromJSON, Show)
 
 
@@ -70,7 +73,7 @@ type GitHubAPI = "users" :> Header  "user-agent" UserAgent
 	    :<|> "repos" :> Header  "user-agent" UserAgent
                          :> BasicAuth "github" Int 
                          :> Capture "username" Username  
-                         :> Capture "repo"     Reponame  :> "lanaguages" :>  Get '[JSON] [RepoLanguages]
+                         :> Capture "repo"     Reponame  :> "languages" :>  Get '[JSON] [RepoLanguages]
 
 gitHubAPI :: Proxy GitHubAPI
 gitHubAPI = Proxy
