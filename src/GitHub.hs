@@ -37,6 +37,10 @@ data GitHubRepo =
   GitHubRepo { name :: Text
              , fullname :: Maybe Text
              , language :: Maybe Text
+	     , size :: Integer 
+	     , has_issue :: Maybe Bool
+	     , created_at :: Maybe Text
+	     , updated_at :: Maybe Text 
              } deriving (Generic, FromJSON, Show)
 
 data RepoContributor =
@@ -65,3 +69,4 @@ getUserRepos ::     Maybe UserAgent -> BasicAuthData -> Username            -> C
 getRepoContribs ::  Maybe UserAgent -> BasicAuthData -> Username -> Reponame -> ClientM [RepoContributor]
   
 getUser :<|> getUserRepos :<|> getRepoContribs = client gitHubAPI
+
