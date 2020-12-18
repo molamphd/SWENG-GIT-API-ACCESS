@@ -24,6 +24,13 @@ data GitHubUser =
   GitHubUser { login :: Text
              , name  :: Maybe Text
              , email :: Maybe Text
+	     , location :: Maybe Text
+	     , company :: Maybe Text
+	     , blog :: Maybe Text
+	     , followers :: Integer
+	     , following :: Integer
+	     , created_at :: Maybe Text
+	     , updated_at :: Maybe Text 
              } deriving (Generic, FromJSON, Show)
 
 data GitHubRepo =

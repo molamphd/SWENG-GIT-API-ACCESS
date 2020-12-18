@@ -52,10 +52,10 @@ testGitHubCall auth name =
       -- get the user's repos
       (SC.runClientM (GH.getUserRepos (Just "haskell-app") auth name) =<< env) >>= \case
         Left err -> do
-          putStrLn $ "Error getting repos: " ++ show err
+          putStrLn $ "Error getting user's repos: " ++ show err
         Right repos -> do
           putStrLn $ "Result for the user's repos: " ++
-            intercalate ", " (map (\(GH.GitHubRepo n _ _ ) -> unpack n) repos)
+            intercalate ", " (map (\(GH.GitHubRepo n _ _) -> unpack n) repos)
 
           -- get the list of contributors to repos
           partitionEithers <$> mapM (getContribs auth name) repos >>= \case
