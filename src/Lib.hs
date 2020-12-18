@@ -60,14 +60,25 @@ testGitHubCall auth name =
           -- get the list of contributors to repos
           partitionEithers <$> mapM (getContribs auth name) repos >>= \case
 
-            ([], contribs) ->
+            ([], contribs) -> 
               putStrLn $ "Contributors to the repos are: " ++ "\n\t" ++
               (intercalate "\n\t" .
                map (\(GH.RepoContributor n c) -> "[" ++ show n ++ ", " ++ show c ++ "]") .
                groupContributors $ concat contribs)
 
-            (ers, _)-> do
+	    (ers, _)-> do
               putStrLn $ "Error getting contributors: " ++ show ers
+
+	-- get languages used in repos 
+	-- (SC.runClientM (GH.getLanguages (Just "haskell-app") auth name) =<< env) >>= \case
+
+        --   ([], languages) -> 
+        --      putStrLn $ "languages used in repos are: " ++ "\n\t" ++
+        --     (intercalate "\n\t" .
+        --       map (\(GH.RepoLanguages n c) -> "[" ++ show n ++ "]")languages)
+
+	--    (errs, _)-> do
+        --     putStrLn $ "Error getting languages: " ++ show errs
                 
            
      
@@ -87,7 +98,12 @@ testGitHubCall auth name =
          where mapfn :: [GH.RepoContributor] -> GH.RepoContributor
                mapfn xs@((GH.RepoContributor l _):_) = GH.RepoContributor l . sum $ 
                                                        map (\(GH.RepoContributor _ c) -> c)  xs
-               
+
+        -- getLanguages :: BasicAuthData -> GH.Username -> GH.GitHubRepo -> IO (Either SC.ClientError [GH.RepoLanguages])
+        -- getLanguages auth name (GH.GitHubRepo repo _ ) =
+        -- SC.runClientM (GH.getRepoLanguages (Just "haskell-app") auth name repo) =<< env
+
+
               
                 
           

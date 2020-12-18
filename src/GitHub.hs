@@ -48,6 +48,12 @@ data RepoContributor =
                   , contributions :: Integer
                   } deriving (Generic, FromJSON, Show)
 
+
+data RepoLanguages =
+  RepoLanguages   { name :: Text
+                  } deriving (Generic, FromJSON, Show)
+
+
 type GitHubAPI = "users" :> Header  "user-agent" UserAgent
                          :> BasicAuth "github" Int 
                          :> Capture "username" Username  :> Get '[JSON] GitHubUser
@@ -60,6 +66,11 @@ type GitHubAPI = "users" :> Header  "user-agent" UserAgent
                          :> BasicAuth "github" Int 
                          :> Capture "username" Username  
                          :> Capture "repo"     Reponame  :> "contributors" :>  Get '[JSON] [RepoContributor]
+	
+	    :<|> "repos" :> Header  "user-agent" UserAgent
+                         :> BasicAuth "github" Int 
+                         :> Capture "username" Username  
+                         :> Capture "repo"     Reponame  :> "lanaguages" :>  Get '[JSON] [RepoLanguages]
 
 gitHubAPI :: Proxy GitHubAPI
 gitHubAPI = Proxy
@@ -67,6 +78,7 @@ gitHubAPI = Proxy
 getUser ::          Maybe UserAgent -> BasicAuthData -> Username            -> ClientM GitHubUser
 getUserRepos ::     Maybe UserAgent -> BasicAuthData -> Username            -> ClientM [GitHubRepo]
 getRepoContribs ::  Maybe UserAgent -> BasicAuthData -> Username -> Reponame -> ClientM [RepoContributor]
+getRepoLanguages::  Maybe UserAgent -> BasicAuthData -> Username -> Reponame -> ClientM [RepoLanguages]
   
-getUser :<|> getUserRepos :<|> getRepoContribs = client gitHubAPI
+getUser :<|> getUserRepos :<|> getRepoContribs :<|> getRepoLanguages = client gitHubAPI
 
